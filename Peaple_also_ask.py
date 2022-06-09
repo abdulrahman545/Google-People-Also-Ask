@@ -50,7 +50,7 @@ for key_word in key_words:
 # ----------------------------------------------------------------------------------------------------
 
     # xpaths for ( questions, answers, link and link text) for the current keyword
-    answers = WebDriverWait(driver, 10).until(EC.presence_of_all_elements_located((By.XPATH, '//div[@class="Wt5Tfe"]/div[2]/div/div[2]/div[1]/div[1]/div[2]/div[1]/div[1]/div//div[1]/span[1]/span[1]'))) 
+    answers = WebDriverWait(driver, 10).until(EC.presence_of_all_elements_located((By.XPATH, '//div[@class="Wt5Tfe"]/div[2]/div/div[2]/div[1]/div[1]/div[2]/div[1]/div[1]'))) 
     questions = WebDriverWait(driver, 10).until(EC.presence_of_all_elements_located((By.XPATH, '//div[@class="Wt5Tfe"]/div[2]/div/div[2]/div[1]/div[1]/div[@aria-expanded]'))) 
     answer_link = WebDriverWait(driver, 10).until(EC.presence_of_all_elements_located((By.XPATH, '//div[@class="Wt5Tfe"]/div[2]/div/div[2]/div[1]/div[1]/div[2]/div[1]/div[1]/div/div[1]/div[1]/div[1]/div[1]/a[1]')))  #try
     answer_link_text = WebDriverWait(driver, 10).until(EC.presence_of_all_elements_located((By.XPATH, '//div[@class="Wt5Tfe"]/div[2]/div/div[2]/div[1]/div[1]/div[2]/div[1]/div[1]/div/div[1]/div[1]/div[1]/div[1]/a[1]/h3'))) #try 
@@ -72,7 +72,11 @@ for key_word in key_words:
         linktext_list.append(d.text)
 
     df = pd.DataFrame({'Keyword': key_word_list, 'Question': questions_list, 'Answer': answers_list, 'sourcelink': sourclink_list, 'linktext': linktext_list})
-     
+         
+    import re
+    df['Answer'] =  [re.sub(r'\n.*','', str(x)) for x in df['Answer']] # remove link
+    df['Answer'] =  [re.sub(r'[\d\d\/]+\d\d\d\d','', str(x)) for x in df['Answer']] # remove date
+
     # save current keyword as a csv in draft folder
     df.to_csv(f'{sys.path[0]}\draft\{excel}.csv', index=False)
 
