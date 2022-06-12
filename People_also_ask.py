@@ -73,11 +73,6 @@ for key_word in key_words:
 
     df = pd.DataFrame({'Keyword': key_word_list, 'Question': questions_list, 'Answer': answers_list, 'sourcelink': sourclink_list, 'linktext': linktext_list})
          
-    import re
-    df['Answer'] =  [re.sub(r'\d+\:\d+|\n\n.+|http.*','', str(x)) for x in df['Answer']] # remove link
-    df['Answer'] =  [re.sub(r'[\d\d\/]+\d\d\d\d','', str(x)) for x in df['Answer']] # remove date
-    df['Answer'] =  df['Answer'].apply(lambda x:x.replace("\n",""))
-
     # save current keyword as a csv in draft folder
     df.to_csv(f'{sys.path[0]}\draft\{excel}.csv', index=False)
 
